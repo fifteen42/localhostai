@@ -116,8 +116,13 @@ export default function ChatContainer() {
   return (
     <div className="flex h-4/5 flex-col bg-white shadow-md rounded-md w-4/5">
       <header className="flex items-center justify-between p-4 border-b border-gray-300">
-        <h1 className="text-lg font-semibold">
-          Chat With Your Chrome AI Model
+        <h1 className="text-lg font-semibold sm:text-base md:text-lg">
+          <span className="sm:hidden inline text-sm">
+            Chat with Gemini Nano
+          </span>
+          <span className="hidden sm:inline">
+            Chat With Your Chrome AI Model
+          </span>
         </h1>
         <div className="flex items-center justify-center gap-1">
           <span className="text-sm text-gray-500">
@@ -125,7 +130,7 @@ export default function ChatContainer() {
           </span>
           <button
             onClick={clearMessages}
-            className=" text-black p-2 hover:bg-gray-100 rounded"
+            className="text-black p-2 hover:bg-gray-100 rounded"
           >
             <AntDesignClearOutlined />
           </button>
@@ -134,7 +139,7 @@ export default function ChatContainer() {
       <div className="flex-1 overflow-y-auto p-4">
         <MessageList messages={messages} />
       </div>
-      <div className="p-4 flex items-center justify-center ">
+      <div className="p-4 flex items-center justify-center">
         <InputBox onSend={handleSend} loading={loading} />
       </div>
     </div>

@@ -22,7 +22,7 @@ export default function InputBox({ onSend, loading }: InputBoxProps) {
   };
 
   return (
-    <div className="flex w-3/5 items-center mt-4">
+    <div className="flex w-full sm:w-3/5 items-center mt-4">
       <input
         type="text"
         value={input}
