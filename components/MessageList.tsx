@@ -1,27 +1,23 @@
-// components/MessageList.tsx
-import React, { useEffect, useRef } from "react";
+"use client";
+
+import { useEffect, useRef } from "react";
 import MessageItem from "./MessageItem";
 
 interface MessageListProps {
-  messages: {
-    sender: "user" | "bot";
-    text: string;
-  }[];
+  messages: Message[];
 }
 
 export default function MessageList({ messages }: MessageListProps) {
-  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: "smooth" });
-    }
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   return (
     <div className="flex flex-col space-y-2 overflow-auto max-h-[80vh]">
-      {messages.map((msg, index) => (
-        <MessageItem key={index} message={msg} />
+      {messages.map((msg) => (
+        <MessageItem key={msg.id} message={msg} />
       ))}
       <div ref={bottomRef} />
     </div>

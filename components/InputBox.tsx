@@ -1,4 +1,6 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useCallback, type KeyboardEvent, type ChangeEvent } from "react";
 
 interface InputBoxProps {
   onSend: (message: string) => void;
@@ -8,38 +10,51 @@ interface InputBoxProps {
 export default function InputBox({ onSend, loading }: InputBoxProps) {
   const [input, setInput] = useState("");
 
-  const handleSend = () => {
-    if (input.trim()) {
-      onSend(input);
+  const handleSend = useCallback(() => {
+    const trimmed = input.trim();
+    if (trimmed && !loading) {
+      onSend(trimmed);
       setInput("");
     }
-  };
+  }, [input, loading, onSend]);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleSend();
-    }
-  };
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        handleSend();
+      }
+    },
+    [handleSend]
+  );
+
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value);
+  }, []);
 
   return (
-    <div className="flex w-full sm:w-3/5 items-center mt-4">
+    <div className="flex w-full sm:w-3/5 items-center mt-4 gap-2">
       <input
         type="text"
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={handleChange}
         onKeyDown={handleKeyDown}
         placeholder="Type a message..."
-        className="flex-1 p-2 border border-gray-300 rounded-md"
+        disabled={loading}
+        aria-label="Message input"
+        className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors"
       />
       <button
         onClick={handleSend}
-        className={`ml-2 px-4 py-2 rounded-md text-white ${
-          loading
+        disabled={loading || !input.trim()}
+        aria-label="Send message"
+        className={`px-4 py-2 rounded-md text-white font-medium transition-colors ${
+          loading || !input.trim()
             ? "bg-gray-400 cursor-not-allowed"
-            : "bg-blue-500 hover:bg-blue-600"
+            : "bg-blue-500 hover:bg-blue-600 active:bg-blue-700"
         }`}
       >
-        Send
+        {loading ? "..." : "Send"}
       </button>
     </div>
   );
